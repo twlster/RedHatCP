@@ -3,14 +3,130 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>jpa-review</artifactId>
+    <packaging>war</packaging>
 
-    <groupId>org.example</groupId>
-    <artifactId>JPAAndSecurity</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <name>Review for JPA + Security (JAAS)</name>
+    <description>This is the review for JPA and Security (JAAS) APIs</description>
+
+    <parent>
+        <groupId>com.redhat.training</groupId>
+        <artifactId>parent-pom</artifactId>
+        <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+            <version>1.0.2.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+            <version>1.0.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.2.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-servlet</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wildffly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-common</artifactId>
+            <version>2.0.0.Final</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>jpa-review</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${version.war.plugin}</version>
+                <extensions>false</extensions>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                        <manifestEntries>
+                            <Dependencies>com.google.guava, org.slf4j</Dependencies>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version.surefire.plugin}</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>arq-wildfly-remote</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-remote</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    <repositories>
+        <repository>
+            <id>alternate-repository</id>
+            <url>http://myrepo.net/repo</url>
+        </repository>
+    </repositories>
 </project>
