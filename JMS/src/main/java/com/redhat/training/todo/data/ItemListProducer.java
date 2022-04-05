@@ -23,7 +23,7 @@ public class ItemListProducer {
   @Produces
   @Named
   public List<Item> getItems(){
-
+    return items;
   }
 
   public void onItemListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Item item){
